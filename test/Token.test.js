@@ -11,7 +11,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
   const symbol = 'MUSK'
   const decimals = '18'
   const totalSupply = tokens(1000000).toString()
-  let token 
+  let token
 
   beforeEach(async () => {
     token = await Token.new()
@@ -22,7 +22,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
   	  const result = await token.name()
   	  result.should.equal(name)
   	})
-  	
+
       it('tracks the symbol', async ()  => {
         const result = await token.symbol()
         result.should.equal(symbol)
@@ -35,7 +35,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
 
       it('tracks the total supply', async ()  => {
         const result = await token.totalSupply()
-        result.toString().should.equal(totalSupply.toString())	
+        result.toString().should.equal(totalSupply.toString())
       })
 
       it('assigns the total supply to the deployer', async () => {
@@ -58,7 +58,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
         balanceOf = await token.balanceOf(deployer)
         balanceOf.toString().should.equal(tokens(999900).toString())
         balanceOf = await token.balanceOf(receiver)
-        balanceOf.toString().should.equal(tokens(100).toString()) 
+        balanceOf.toString().should.equal(tokens(100).toString())
       })
 
       it('emits a Transfer event', async () => {
@@ -76,7 +76,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
 
       it('rejects insufficient balances', async () => {
         let invalidAmount
-        invalidAmount = tokens(100000000) // 100 million - greater than total supply. 
+        invalidAmount = tokens(100000000) // 100 million - greater than total supply.
         await token.transfer(receiver, invalidAmount, { from: deployer }).should.be.rejectedWith(EVM_REVERT)
 
         // Attempt to transfer tokens, when you have none.
@@ -93,7 +93,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
 
   describe('approving tokens', () => {
     let result
-    let amount 
+    let amount
 
     beforeEach( async () => {
       amount = tokens(100)
@@ -121,7 +121,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
       it('rejects invalid spenders', async () => {
         await token.approve(0x0, amount, { from: deployer }).should.be.rejected
       })
-      
+
     })
   })
 
@@ -143,7 +143,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
         balanceOf = await token.balanceOf(deployer)
         balanceOf.toString().should.equal(tokens(999900).toString())
         balanceOf = await token.balanceOf(receiver)
-        balanceOf.toString().should.equal(tokens(100).toString()) 
+        balanceOf.toString().should.equal(tokens(100).toString())
       })
 
       it('resets the allowance', async () => {
@@ -174,11 +174,4 @@ contract('Token', ([deployer, receiver, exchange]) => {
       })
     })
   })
-
-
-
-
-
-
-
 })
