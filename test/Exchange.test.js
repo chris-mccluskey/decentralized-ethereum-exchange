@@ -27,3 +27,15 @@ contract('Exchange', ([deployer, feeAccount]) => {
 
   })
 })
+
+describe('depositing tokens', () => {
+  describe('success', () => {
+    it('tracks the token deposit', async () => {
+
+    })
+  })
+  describe('failure', () => {
+    
+  })
+  })
+})

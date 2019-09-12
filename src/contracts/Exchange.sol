@@ -9,7 +9,7 @@ contract Exchange {
         feePercent = _feePercent;
     }
     function depositToken(address _token, uint _amount) public {
-      Token(_token)
+      Token(_token).transferFrom(msg.sender, address(this), _amount);
     }
 }
 
