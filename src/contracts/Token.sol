@@ -1,8 +1,8 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.5.0; // Version of Solidity
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-contract Token {
+contract Token { // All code for the smart contract will be within this contract declaration
 	using SafeMath for uint;
 
 	// Variable
@@ -12,7 +12,7 @@ contract Token {
 	uint256 public totalSupply;
 	mapping(address => uint256) public balanceOf; // Track balances - Stores information. Mapping is like a dictionary in python, key - value pairs (address: token_balance)
 	mapping(address => mapping(address => uint256)) public allowance;
-	
+
 	// Events
 	event Transfer(address indexed from, address indexed to, uint256 value);
 	event Approval(address indexed owner, address indexed spender, uint256 value);
@@ -34,7 +34,7 @@ contract Token {
 		emit Transfer(_from, _to, _value);
 	}
 
-	// Approve tokens 
+	// Approve tokens
 	function approve(address _spender, uint256 _value) public returns (bool success) {
 		require(_spender != address(0));
 		allowance[msg.sender][_spender] = _value;
@@ -50,4 +50,3 @@ contract Token {
 		return true;
 	}
 }
-
