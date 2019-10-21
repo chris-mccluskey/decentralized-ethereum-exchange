@@ -6,11 +6,11 @@ contract Token { // All code for the smart contract will be within this contract
 	using SafeMath for uint;
 
 	// Variable
-	string public name = "Muskey Coin";
+	string public name = "Muskey Coin"; // public makes name readable outside of the smart contract
 	string public symbol = "MUSK";
 	uint256 public decimals = 18; // unit256 means unsigned intiger and 256 is number of bites. A number without a sign 1 is a uint, -1 has a sign (-). We always want these numbers to be positive, can't have negaitve balances.
 	uint256 public totalSupply;
-	mapping(address => uint256) public balanceOf; // Track balances - Stores information. Mapping is like a dictionary in python, key - value pairs (address: token_balance)
+	mapping(address => uint256) public balanceOf; // Track balances - Stores information. Mapping is like a dictionary in python, key - value pairs (address: token_balance). It is doing two things, a state variable and expose a balanceOf fuction because it's public, solidity generates a function for free when we use public in the declaration.
 	mapping(address => mapping(address => uint256)) public allowance;
 
 	// Events
