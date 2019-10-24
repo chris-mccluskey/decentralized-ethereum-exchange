@@ -10,15 +10,15 @@ contract Token { // All code for the smart contract will be within this contract
 	string public symbol = "MUSK";
 	uint256 public decimals = 18; // unit256 means unsigned intiger and 256 is number of bites. A number without a sign 1 is a uint, -1 has a sign (-). We always want these numbers to be positive, can't have negaitve balances.
 	uint256 public totalSupply;
-	mapping(address => uint256) public balanceOf; // Track balances - Stores information. Mapping is like a dictionary in python, key - value pairs (address: token_balance). It is doing two things, a state variable and expose a balanceOf fuction because it's public, solidity generates a function for free when we use public in the declaration.
+	mapping(address => uint256) public balanceOf; // Track balances for the token on the blockchain - Stores information. Mapping is like a dictionary in python, key - value pairs (address: token_balance). It is doing two things, a state variable and expose a balanceOf fuction because it's public, solidity generates a function for free when we use public in the declaration.
 	mapping(address => mapping(address => uint256)) public allowance;
 
 	// Events
-	event Transfer(address indexed from, address indexed to, uint256 value);
+	event Transfer(address indexed from, address indexed to, uint256 value); // indexed means you can subscribe to only listen for events that involve either the from or the two addressses.
 	event Approval(address indexed owner, address indexed spender, uint256 value);
 	constructor() public {
 		totalSupply = 1000000 * (10 ** decimals);
-		balanceOf[msg.sender] = totalSupply;
+		balanceOf[msg.sender] = totalSupply; // assigns total supply of the token to the address to deploys the contract.
 	}
     // Send tokens - Impliments behavior / fuctionality
 	function transfer(address _to, uint256 _value) public returns (bool success) {
@@ -28,9 +28,9 @@ contract Token { // All code for the smart contract will be within this contract
 	}
 
 	function _transfer(address _from, address _to, uint256 _value) internal {
-		require(_to != address(0));
-		balanceOf[_from] = balanceOf[_from].sub(_value);
-		balanceOf[_to] = balanceOf[_to].add(_value);
+		require(_to != address(0)); // Solidity has the `require` function, if the argument is True it will proceed with execution below, if False it will throw an exception. 
+		balanceOf[_from] = balanceOf[_from].sub(_value); // subtractign balance of value sent from their senders balance on the blockchain
+		balanceOf[_to] = balanceOf[_to].add(_value); // adding the balance of the value sent from the sender to the receiver
 		emit Transfer(_from, _to, _value);
 	}
 

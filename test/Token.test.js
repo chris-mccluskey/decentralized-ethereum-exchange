@@ -1,4 +1,5 @@
-import { tokens, EVM_REVERT } from '../helpers'
+import { tokens, EVM_REVERT } from '../helpers' // We can import because we setup babel in truffle-config.js and .babelrc file and installed via package.json
+// helper function that is a built in web3 that will turn the passed `n` arguement in the form of Ether to WEI number.
 
 const Token = artifacts.require('./Token')
 
@@ -6,7 +7,7 @@ require('chai')
   .use(require('chai-as-promised'))
   .should()
 
-contract('Token', ([deployer, receiver, exchange]) => {
+contract('Token', ([deployer, receiver, exchange]) => { // accounts that we will test with, within the array.
   const name = 'Muskey Coin'
   const symbol = 'MUSK'
   const decimals = '18'
@@ -48,10 +49,10 @@ contract('Token', ([deployer, receiver, exchange]) => {
     let result
     let amount
 
-    describe('success', async () => {
+    describe('success', async () => {  // describe is a way to group tests in Mocha. This is section is testing successful token transfers
       beforeEach(async () => {
         amount = tokens(100)
-        result = await token.transfer(receiver, amount, { from: deployer })
+        result = await token.transfer(receiver, amount, { from: deployer }) // In the Token.sol transfer function there are only two parameters, to and value, but implicitly we can pass in the javescript object that is meta data {from: deployer} corresponding to the caller of the function and in soldity that would be msg.sender.
       })
       it('transfers token balances', async () => {
         let balanceOf
@@ -62,7 +63,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
       })
 
       it('emits a Transfer event', async () => {
-        const log = result.logs[0]
+        const log = result.logs[0] // the emitted transfer event is inside the logs as an object
         log.event.should.eq('Transfer')
         const event = log.args
         event.from.toString().should.equal(deployer, 'from is correct')
@@ -74,7 +75,7 @@ contract('Token', ([deployer, receiver, exchange]) => {
 
     describe('failure', async () => {
 
-      it('rejects insufficient balances', async () => {
+      it('rejects insufficient balances', async () => { // it is used in mocha for async calls.
         let invalidAmount
         invalidAmount = tokens(100000000) // 100 million - greater than total supply.
         await token.transfer(receiver, invalidAmount, { from: deployer }).should.be.rejectedWith(EVM_REVERT)
