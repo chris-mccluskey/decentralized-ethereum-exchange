@@ -22,13 +22,13 @@ contract Token { // All code for the smart contract will be within this contract
 	}
     // Send tokens - Impliments behavior / fuctionality
 	function transfer(address _to, uint256 _value) public returns (bool success) {
-		require(balanceOf[msg.sender] >= _value);
+		require(balanceOf[msg.sender] >= _value); // require is a solidity function, if the argument is `true` the code below will run, if false it will throw an error
 		_transfer(msg.sender, _to, _value);
 		return true;
 	}
 
 	function _transfer(address _from, address _to, uint256 _value) internal {
-		require(_to != address(0)); // Solidity has the `require` function, if the argument is True it will proceed with execution below, if False it will throw an exception. 
+		require(_to != address(0)); // Solidity has the `require` function, if the argument is True it will proceed with execution below, if False it will throw an exception.
 		balanceOf[_from] = balanceOf[_from].sub(_value); // subtractign balance of value sent from their senders balance on the blockchain
 		balanceOf[_to] = balanceOf[_to].add(_value); // adding the balance of the value sent from the sender to the receiver
 		emit Transfer(_from, _to, _value);

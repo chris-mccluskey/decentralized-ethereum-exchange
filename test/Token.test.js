@@ -86,7 +86,7 @@ contract('Token', ([deployer, receiver, exchange]) => { // accounts that we will
       })
 
       it('rejects invalid recipients', async () => {
-        await token.transfer(0x0, amount, { from: deployer }).should.be.rejected
+        await token.transfer(0x0, amount, { from: deployer }).should.be.rejected // testing that an invalid address is rejected (0x0 is invalid)
       })
     })
   })
