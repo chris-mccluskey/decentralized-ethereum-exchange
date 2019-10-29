@@ -42,7 +42,7 @@ contract Token { // All code for the smart contract will be within this contract
 		return true;
 	}
 
-	function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
+	function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) { // This function is to allow an exchange to spend tokens (exchange). This is to approve the exchange, it can be revoked at anytime aswell.
 		require(_value <= balanceOf[_from]);
 		require(_value <= allowance[_from][msg.sender]);
 		allowance[_from][msg.sender] = allowance[_from][msg.sender].sub(_value);
