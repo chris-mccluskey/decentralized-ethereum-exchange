@@ -11,7 +11,7 @@ contract Token { // All code for the smart contract will be within this contract
 	uint256 public decimals = 18; // unit256 means unsigned intiger and 256 is number of bites. A number without a sign 1 is a uint, -1 has a sign (-). We always want these numbers to be positive, can't have negaitve balances.
 	uint256 public totalSupply;
 	mapping(address => uint256) public balanceOf; // Track balances for the token on the blockchain - Stores information. Mapping is like a dictionary in python, key - value pairs (address: token_balance). It is doing two things, a state variable and expose a balanceOf fuction because it's public, solidity generates a function for free when we use public in the declaration.
-	mapping(address => mapping(address => uint256)) public allowance;
+	mapping(address => mapping(address => uint256)) public allowance; // The amount of tokens the exchange is allowed to expend
 
 	// Events
 	event Transfer(address indexed from, address indexed to, uint256 value); // indexed means you can subscribe to only listen for events that involve either the from or the two addressses.
