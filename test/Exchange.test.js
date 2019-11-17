@@ -21,7 +21,7 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
 
     // Deploy exchange
     exchange = await Exchange.new(feeAccount, feePercent)
-  })
+   })
 
   describe('deployment', () => {
   	it('tracks the fee account', async () => {
@@ -31,30 +31,33 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
 
     it('tracks the fee percent', async () => {
       const result = await exchange.feePercent()
-      result.should.equal(feePercent)
+      result.toString().should.equal(feePercent.toString())
     })
 
-  })
+   })
+
+  describe('depositing tokens', () => {
+    let result
+    let amount
+
+    beforeEach(async () => {
+      amount = tokens(10)
+      await token.approve(exchange.address, amount, { from: user1 })
+      const result = await exchange.depositToken(token.address, amount, { from: user1})
+    })
+
+    describe('success', () => {
+      it('tracks the token deposit', async () => {
+        // check exchange balance
+        let balance
+        balance = await token.balanceOf(exchange.address)
+        balance.toString().should.equal(amount.toString())
+        balance = await exchange.tokens(token.address, user1)
+        balance.toString().should.equal(amount.toString())
+      })
+    })
+    describe('failure', () => {
+
+    })
 })
-
-describe('depositing tokens', () => {
-  let result
-  let amount
-  beforeEach(async () => {
-    amount = tokens(10)
-    await token.approve(exchange.address, amount, { from: user1 })
-    const result = await exchange.depositToken(token.address, amount, { from: user1})
-  })
-
-  describe('success', () => {
-    it('tracks the token deposit', async () => {
-      let balance
-      balance = await token.balanceOf(exchange.address)
-      balance.toString().should.equal(amount.toString())
-    })
-  })
-  describe('failure', () => {
-
-  })
-  })
 })

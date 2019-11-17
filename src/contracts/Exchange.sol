@@ -1,7 +1,10 @@
 pragma solidity ^0.5.0;
 import "./Token.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract Exchange {
+  	using SafeMath for uint;
+
     // Variables
     address public feeAccount; // the account that receives exchange fees
     uint256 public feePercent; // the fee percentage we take from exchange fees
@@ -11,7 +14,7 @@ contract Exchange {
         feePercent = _feePercent;
     }
     function depositToken(address _token, uint _amount) public {
-      tokens[_token][msg.sender] = tokens[_token][msg.sender].add(_amount)
+      tokens[_token][msg.sender] = tokens[_token][msg.sender].add(_amount);
       require(Token(_token).transferFrom(msg.sender, address(this), _amount)); // require returns a truthy value, if it is False the function will stop execution
     }
 }
