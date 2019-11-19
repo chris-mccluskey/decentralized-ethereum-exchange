@@ -13,6 +13,7 @@ contract Exchange {
 
     // Events
     event Deposit(address token, address user, uint256 amount, uint256 balance);
+    event Withdraw(address token, address user, uint amount, uint balance);
 
     constructor (address _feeAccount, uint256 _feePercent) public { // _ is used for local variables when they represent the values that will be passed to a state variable. _ is convention
         feeAccount = _feeAccount;
@@ -27,6 +28,13 @@ contract Exchange {
     function depositEther() payable public { // We don't have to have ETH as parameter, we have to have the additonal modifier (payable) to access ETH in a fucntion. We can access the ETH info meta data through msg.
       tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].add(msg.value); // msg.value is the number of wei sent with the transaction.
       emit Deposit(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);
+    }
+
+    function withdrawEther(uint _amount) public {
+      require(tokens[ETHER][msg.sender] >= _amount);
+      tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
+      msg.sender.transfer(_amount);
+      emit Withdraw(ETHER, msg.sender, _amount, tokens[ETHER][msg.sender]);
     }
 
     function depositToken(address _token, uint _amount) public {

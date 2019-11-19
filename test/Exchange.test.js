@@ -37,6 +37,7 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
     it('reverts when Ether is sent', async () => {
       await exchange.sendTransaction({ value: 1, from: user1 }).should.be.rejectedWith(EVM_REVERT)
     })
+
   })
 
   describe('depositing Ether', async () => {
@@ -62,6 +63,41 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
       event.balance.toString().should.equal(amount.toString(), 'balance is correct')
     })
 
+  })
+
+  describe('withdrawing Ether', async () => {
+    let result
+    let amount
+    beforeEach(async () => {
+      // Deposit Ether to the exchange First
+      amount = ether(1)
+      await exchange.depositEther({ from: user1, value: amount })
+    })
+    describe('success', async () => {
+      beforeEach(async () => {
+        // Withdraw Ether
+        result = await exchange.withdrawEther(amount, { from: user1 })
+      })
+      it('withdraws Ether funds', async () => {
+        const balance = await exchange.tokens(ETHER_ADDRESS, user1)
+        balance.toString().should.equal('0')
+      })
+
+      it('emits a "Withdraw" event', async () => {
+        const log = result.logs[0] // the emitted transfer event is inside the logs as an object
+        log.event.should.eq('Withdraw')
+        const event = log.args
+        event.token.should.equal(ETHER_ADDRESS)
+        event.user.should.equal(user1)
+        event.amount.toString().should.equal(amount.toString())
+        event.balance.toString().should.equal('0')
+      })
+    })
+    describe('failure', async () => {
+      it('rejects withdraws for insuficient balances', async () => {
+        await exchange.withdrawEther(ether(100), { from: user1}).should.be.rejectedWith(EVM_REVERT)
+      })
+    })
   })
 
   describe('depositing tokens', () => {
