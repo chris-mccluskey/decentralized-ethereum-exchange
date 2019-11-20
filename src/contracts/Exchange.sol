@@ -43,6 +43,18 @@ contract Exchange {
       require(Token(_token).transferFrom(msg.sender, address(this), _amount)); // require returns a truthy value, if it is False the function will stop execution
       emit Deposit(_token, msg.sender, _amount, tokens[_token][msg.sender]);
     }
+
+    function withdrawToken(address _token, uint256 _amount) public {
+      require(_token != ETHER);
+      require(tokens[_token][msg.sender] >= _amount);
+      tokens[_token][msg.sender] = tokens[_token][msg.sender].sub(_amount);
+      require(Token(_token).transfer(msg.sender, _amount));
+      emit Withdraw(_token, msg.sender, _amount, tokens[_token][msg.sender]);
+    }
+
+    function balanceOf(address _token, address _user) public view returns (uint256) {
+      return tokens[_token][_user];
+    }
 }
 
 // TODO:
