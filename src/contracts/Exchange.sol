@@ -14,6 +14,7 @@ contract Exchange {
     // There is no way to check the size of a mapping wihin the blockchain, it's a limitation of the EVM
     // That is why we have an orderCount, we can see the size of the mapping with the orderCount value.
     uint256 public orderCount;
+    mapping(uint256 => bool) public orderCancelled; // The items in the orders mapping cannot be removed so we are creating a new mapping to say `true` to canceld orders. They will share the same id as the orders mapping.
 
     // Events
     event Deposit(address token, address user, uint256 amount, uint256 balance);
@@ -27,6 +28,16 @@ contract Exchange {
       uint256 amountGive,
       uint256 timestamp
       );
+    event Cancel(
+      uint256 id,
+      address user,
+      address tokenGet,
+      uint256 amountGet,
+      address tokenGive,
+      uint256 amountGive,
+      uint256 timestamp
+      );
+
 
     // structs
     struct _Order { // Order model. used _ to avoid naming conflict with the event order. Event order we will use outside of the smart contract while we use this model inside the contract.
@@ -84,6 +95,17 @@ contract Exchange {
       orderCount = orderCount.add(1);
       orders[orderCount] = _Order(orderCount, msg.sender, _tokenGet, _amountGEt, _tokenGive, _amountGive, now);
       emit Order(orderCount, msg.sender, _tokenGet, _amountGEt, _tokenGive, _amountGive, now);
+    }
+
+    function cancelOrder(uint256 _id) public {
+      // Must be the users "my" order
+      // The order must exist
+      _Order storage _order = orders[_id]; // the data type is of _Order we created, we are fetching from `storage` on the block chain, assigning to the variable _order. on the right side of = we are fetching from the mapping.
+      require(address(_order.user) == msg.sender); // require the address of the person calling this function (msg.sender) is the owner of the order they are canceling.
+      require(_order.id == _id); // the order must exist. If the order doesn't exist, the mapping will return a blank struct with the value being 0. causeing this to fail.
+      orderCancelled[_id] = true;
+      emit Cancel(_order.id, msg.sender, _order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive, now);
+
     }
 }
 
