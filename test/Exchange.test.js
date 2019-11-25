@@ -279,7 +279,7 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
           await exchange.cancelOrder(invalidOrderId, { from: user1}).should.be.rejectedWith(EVM_REVERT)
         })
         it('rejects unauthorized cancelations', async () => {
-          // Try cancel someone elses orders
+          // Try cancel someone elses orders, should fail.
           await exchange.cancelOrder('1', { from: user2 }).should.be.rejectedWith(EVM_REVERT)
         })
       })
