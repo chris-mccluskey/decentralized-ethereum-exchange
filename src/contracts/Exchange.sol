@@ -15,7 +15,7 @@ contract Exchange {
     // That is why we have an orderCount, we can see the size of the mapping with the orderCount value.
     uint256 public orderCount;
     mapping(uint256 => bool) public orderCancelled; // The items in the orders mapping cannot be removed so we are creating a new mapping to say `true` to canceld orders. They will share the same id as the orders mapping.
-
+    mapping(uint256 => bool) public orderFilled; // Maping keeping track of orders being filled true or false
     // Events
     event Deposit(address token, address user, uint256 amount, uint256 balance);
     event Withdraw(address token, address user, uint256 amount, uint256 balance);
@@ -27,7 +27,7 @@ contract Exchange {
       address tokenGive,
       uint256 amountGive,
       uint256 timestamp
-      );
+    );
     event Cancel(
       uint256 id,
       address user,
@@ -36,7 +36,18 @@ contract Exchange {
       address tokenGive,
       uint256 amountGive,
       uint256 timestamp
-      );
+    );
+    event Trade(
+      uint256 id,
+      address user,
+      address tokenGet,
+      uint256 amountGet,
+      address tokenGive,
+      uint256 amountGive,
+      address userFill,
+      uint256 timestamp
+    );
+
 
 
     // structs
@@ -103,9 +114,32 @@ contract Exchange {
       _Order storage _order = orders[_id]; // the data type is of _Order we created, we are fetching from `storage` on the block chain, assigning to the variable _order. on the right side of = we are fetching from the mapping.
       require(address(_order.user) == msg.sender); // require the address of the person calling this function (msg.sender) is the owner of the order they are canceling.
       require(_order.id == _id); // the order must exist. If the order doesn't exist, the mapping will return a blank struct with the value being 0. causeing this to fail.
-      orderCancelled[_id] = true;
+      orderCancelled[_id] = true; // Set that order id value to true, meaning cancelled.
       emit Cancel(_order.id, msg.sender, _order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive, now);
+    }
 
+    function fillOrder(uint256 _id) public {
+      require(_id > 0 && _id < orderCount); // Make sure it is a valid order
+      require(!orderFilled[_id]); // Require this id is not in the filled orders mapping
+      require(!orderCancelled[_id]); // Require this id is not in the cancelled orders mapping
+      _Order storage _order = orders[_id]; // Fetch order from storage
+      _trade(_order.id, _order.user, _order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive); // Execute the trade.
+      orderFilled[_order.id] = true; // mapping of the order id being filled is set to true
+    }
+
+    function _trade(uint256 _orderId, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal  // Only used internally by the smart contract, cannot be called from outside of the contract.
+      // Fee is paid by the person that filled the order (msg.sender)
+      // Fee is deducted from _amountGet
+      unit256 _feeAmount = _amountGive.mul(feePercent).div(100)
+      // Execute trade
+      // Charge fees
+      tokens[_tokenGet][msg.sender] = tokens[_tokenGet][msg.sender].sub(_amountGet.add(_feeAmount)); // add the 10% fee to the msg.sender subtracted balance
+      tokens[_tokenGet][_user] = tokens[_tokenGet][_user].add(_amountGet);
+      tokens[_tokenGet][_feeAccount] = tokens[_tokenGet][_feeAccount].add(_feeAmount);
+      tokens[_tokenGive][_user] = tokens[_tokenGive][_user].sub(_amountGive);
+      tokens[_tokenGive][msg.sender] = tokens[_tokenGive][msg.sender].add(amountGive);
+
+      emit Trade(_orderId, _user, _tokenGet, _amountGet, _tokenGive, _amountGive, msg.sender, now);
     }
 }
 
