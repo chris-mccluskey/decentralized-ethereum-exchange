@@ -6,7 +6,16 @@ module.exports = async function(callback) { // This exports an asynchronos funct
     // Fetch accounts from wallet - these are unlocked
     const accounts = await web3.eth.getAccounts()
 
-  } catch (error) { // Catch errors as a lot is happening and errors could be thrown. 
+    // Fetched deployed Token
+    const token = await Token.deployed()
+    console.log("Token fetched", token.address)
+
+    // Fetch deployed Exchange
+    const exchange = await Exchange.deployed()
+    console.log("Exchange fetched", exchange.address)
+    
+
+  } catch (error) { // Catch errors as a lot is happening and errors could be thrown.
     console.log(error)
   }
 
