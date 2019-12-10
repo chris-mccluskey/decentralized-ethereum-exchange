@@ -130,7 +130,7 @@ contract Exchange {
     function _trade(uint256 _orderId, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal { // Only used internally by the smart contract, cannot be called from outside of the contract.
       // Fee is paid by the person that filled the order (msg.sender)
       // Fee is deducted from _amountGet
-      uint256 _feeAmount = _amountGive.mul(feePercent).div(100);
+      uint256 _feeAmount = _amountGet.mul(feePercent).div(100);
       // Execute trade
       // Charge fees
       tokens[_tokenGet][msg.sender] = tokens[_tokenGet][msg.sender].sub(_amountGet.add(_feeAmount)); // add the 10% fee to the msg.sender subtracted balance

@@ -9,5 +9,5 @@ module.exports = async function(deployer) {
   const feeAccount = accounts[0]
   const feePercent = 10
 
-  await deployer.deploy(Exchange, feeAccount, feePercent); // pass in the constructor values for the exchange deployer
+  await deployer.deploy(Exchange, feeAccount, feePercent) // pass in the constructor values for the exchange deployer
 };
