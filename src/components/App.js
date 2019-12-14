@@ -1,16 +1,45 @@
 import React, { Component } from 'react';
 import './App.css';
 import Web3 from 'web3';
+import Token from '../abis/Token.json'
+
+const web3 = new Web3(window.web3.currentProvider);
+
+window.addEventListener("load", async () => {
+  // Modern dapp browsers...
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    try {
+      // Request account access if needed
+      await window.ethereum.enable();
+    } catch (error) {
+      // User denied account access...
+    }
+  }
+  // Legacy dapp browsers...
+  else if (window.web3) {
+    window.web3 = new Web3(web3.currentProvider);
+  }
+  // Non-dapp browsers...
+  else {
+    console.log("Non-Ethereum browser detected. You should consider trying MetaMask!");
+  }
+});
+
 // If adding bootstrap classes we must rename class to className to avoid a claching with React
 class App extends Component {
   componentWillMount() {
     this.loadBlockchainData()
   }
 
-
+  // For web3.eth.Contract the first parameter is jsonInterface it will be the 'abi', that tells us all the behavoir, how token works, functions, arguements, properties of smart contract, all behavoir!. Address is where it is on the blockchain. That is all contained in the ABI json file.
   async loadBlockchainData() {
-    const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545')
-    console.log("web3", web3)
+    const network = await web3.eth.net.getNetworkType() // Returns the network type
+    const networkId = await web3.eth.net.getId() // Returns networkId
+    const accounts = await web3.eth.getAccounts() // Returns the accounts connected.
+    const token = web3.eth.Contract(Token.abi, Token.networks[networkId].address) // Access the Token contract on the chain.
+    const totalSupply = await token.methods.totalSupply().call() // We made the totalSupply function in the smart contract. Call doesn't send a tx it just reads from the blockchain.
+    console.log("totalSupply", totalSupply)
   }
 
   render() {
