@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import './App.css';
-import Web3 from 'web3';
+import Web3 from 'web3'
 import Token from '../abis/Token.json'
 
 const web3 = new Web3(window.web3.currentProvider);
