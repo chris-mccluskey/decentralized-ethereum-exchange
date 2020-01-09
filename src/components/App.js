@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import Web3 from 'web3';
-import Token from '../abis/Token.json'
+import Token from '../abis/Token.json';
 
-const web3 = new Web3(window.web3.currentProvider);
+const web3 = new Web3(Web3.givenProvider || "HTTP://127.0.0.1:7545");
 
 window.addEventListener("load", async () => {
   // Modern dapp browsers...
@@ -22,7 +22,7 @@ window.addEventListener("load", async () => {
   }
   // Non-dapp browsers...
   else {
-    console.log("Non-Ethereum browser detected. You should consider trying MetaMask!");
+    console.log("Non-Ethereum browser detected. You should consider trying MetaMask");
   }
 });
 
@@ -32,12 +32,12 @@ class App extends Component {
     this.loadBlockchainData()
   }
 
-  // For web3.eth.Contract the first parameter is jsonInterface it will be the 'abi', that tells us all the behavoir, how token works, functions, arguements, properties of smart contract, all behavoir!. Address is where it is on the blockchain. That is all contained in the ABI json file.
+  // For web3.eth.Contract the first parameter is jsonInterface it will be the 'abi', that tells us all the behavoir, how token works, functions, arguements, properties of smart contract, all behavoir. Address is where it is on the blockchain. That is all contained in the ABI json file.
   async loadBlockchainData() {
     const network = await web3.eth.net.getNetworkType() // Returns the network type
     const networkId = await web3.eth.net.getId() // Returns networkId
     const accounts = await web3.eth.getAccounts() // Returns the accounts connected.
-    const token = web3.eth.Contract(Token.abi, Token.networks[networkId].address) // Access the Token contract on the chain.
+    const token = new web3.eth.Contract(Token.abi, Token.networks[networkId].address) // Access the Token contract on the chain.
     const totalSupply = await token.methods.totalSupply().call() // We made the totalSupply function in the smart contract. Call doesn't send a tx it just reads from the blockchain.
     console.log("totalSupply", totalSupply)
   }
