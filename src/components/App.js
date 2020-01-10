@@ -26,7 +26,7 @@ window.addEventListener("load", async () => {
   }
 });
 
-// If adding bootstrap classes we must rename class to className to avoid a claching with React
+// componentWillMount is a react life cycle function.
 class App extends Component {
   componentWillMount() {
     this.loadBlockchainData()
@@ -38,10 +38,10 @@ class App extends Component {
     const networkId = await web3.eth.net.getId() // Returns networkId
     const accounts = await web3.eth.getAccounts() // Returns the accounts connected.
     const token = new web3.eth.Contract(Token.abi, Token.networks[networkId].address) // Access the Token contract on the chain.
-    const totalSupply = await token.methods.totalSupply().call() // We made the totalSupply function in the smart contract. Call doesn't send a tx it just reads from the blockchain.
-    console.log("totalSupply", totalSupply)
+    const name = await token.methods.name().call() // We made the totalSupply function in the smart contract. Call doesn't send a tx it just reads from the blockchain.
+    console.log("name", name)
   }
-
+// Must use className when working with react rather than just the default class
   render() {
     return (
       <div>

@@ -1,3 +1,5 @@
+// Script to make transactions on Ganache, makes orders, cancels, fills, etc.. 
+
 // Contracts
 const Token = artifacts.require("Token")
 const Exchange = artifacts.require("Exchange")
