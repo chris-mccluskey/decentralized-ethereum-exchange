@@ -1,12 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import App from './components/App'
 import configureStore from './store/configureStore'
 import 'bootstrap/dist/css/bootstrap.css'
 import * as serviceWorker from './serviceWorker'
 
+
+// Wrapping our app in the redux provider, exposing the redux store to the App
 ReactDOM.render(
   <Provider store={configureStore()}>
     <App />
