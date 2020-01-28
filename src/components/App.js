@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './App.css';
 import Web3 from 'web3'
+import NavBar from './NavBar'
 import { connect } from 'react-redux'
 import {
   loadWeb3,
@@ -25,7 +26,7 @@ class App extends Component {
     const token = new loadToken(dispatch, web3, networkId) // Access the Token contract on the chain.
     loadExchange(dispatch, web3, networkId)
 
-    
+
     window.addEventListener("load", async () => {
       // Modern dapp browsers...
       if (window.ethereum) {
@@ -49,27 +50,10 @@ class App extends Component {
   }
 // Must use className when working with react rather than just the default class
   render() {
+
     return (
       <div>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-info">
-          <a className="navbar-brand" href="/#">Navbar</a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link" href="/#">Link 1</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/#">Link 2</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/#">Link 3</a>
-              </li>
-            </ul>
-          </div>
-        </nav>
+        < NavBar />
         <div className="content">
           <div className="vertical-split">
             <div className="card bg-dark text-white">
@@ -141,7 +125,7 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
-    // Fill in soon
+    // Soon
   }
 }
 
