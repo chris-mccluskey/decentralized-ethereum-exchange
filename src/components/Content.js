@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { exchangeSelector } from '../store/selectors'
+import { loadAllOrders } from '../store/interactions'
 
 class Content extends Component {
+  componentWillMount() {
+    this.loadBlockchainData(this.props.dispatch)
+  }
 
+  // For web3.eth.Contract the first parameter is jsonInterface it will be the 'abi', that tells us all the behavoir, how token works, functions, arguements, properties of smart contract, all behavoir. Address is where it is on the blockchain. That is all contained in the ABI json file.
+  async loadBlockchainData(dispatch) {
+    await loadAllOrders(dispatch, this.props.exchange)
+  }
   render() {
     return (
       <div className="content">
@@ -75,7 +84,7 @@ class Content extends Component {
 
 function mapStateToProps(state) {
   return {
-    // TODO: Fill me in...
+    exchange: exchangeSelector(state)
   }
 }
 
