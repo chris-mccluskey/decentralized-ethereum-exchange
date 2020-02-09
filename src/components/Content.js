@@ -4,7 +4,6 @@ import { exchangeSelector } from '../store/selectors'
 import { loadAllOrders } from '../store/interactions'
 import Trades from './Trades'
 
-
 class Content extends Component {
   componentWillMount() {
     this.loadBlockchainData(this.props.dispatch)
@@ -13,6 +12,7 @@ class Content extends Component {
   async loadBlockchainData(dispatch) {
     await loadAllOrders(dispatch, this.props.exchange)
   }
+
   render() {
     return (
       <div className="content">
@@ -67,9 +67,7 @@ class Content extends Component {
             </div>
           </div>
         </div>
-        <div className="vertical">
         <Trades />
-        </div>
       </div>
     )
   }

@@ -21,7 +21,6 @@ export function tokenLoaded(contract) {
   }
 }
 
-
 // EXCHANGE
 export function exchangeLoaded(contract) {
   return {
