@@ -4,10 +4,12 @@ export const RED = 'danger'
 
 export const DECIMALS = (10**18)
 
-export const ether = (wei) => { // ether into wei
+// Shortcut to avoid passing around web3 connection
+export const ether = (wei) => {
   if(wei) {
-    return(wei / DECIMALS)
+    return(wei / DECIMALS) // 18 decimal places
   }
 }
-// same as ether
+
+// Tokens and ether havesame decimal resolution
 export const tokens = ether
