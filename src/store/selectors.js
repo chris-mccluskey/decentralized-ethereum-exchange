@@ -303,3 +303,6 @@ const buildGraphData = (orders) => {
   })
   return graphData
 }
+
+const orderCancelling = state => get(state, 'exchange.orderCancelling', false) // Checks the exchange if the orderCalling flag is there otherwise it will repsond with false
+export const orderCancellingSelector = createSelector(orderCancelling, status => status)

@@ -9,7 +9,9 @@ import {
   exchangeLoaded,
   cancelledOrdersLoaded,
   filledOrdersLoaded,
-  allOrdersLoaded
+  allOrdersLoaded,
+  orderCancelling,
+  orderCancelled
 } from './actions'
 
 
@@ -68,4 +70,21 @@ export const loadAllOrders = async (dispatch, exchange) => {
   const allOrders = orderStream.map((event) => event.returnValues)
   // Add open orders to Redux store
   dispatch(allOrdersLoaded(allOrders))
+}
+
+export const cancelOrder = (dispatch, exchange, order, account) => {
+  exchange.methods.cancelOrder(order.id).send({ from: account })
+  .on('transactionHash', (hash) => {
+    dispatch(orderCancelling())
+  })
+  .on('error', (error) => {
+    console.log(error)
+    window.alert('You need more gas bro!')
+  })
+}
+
+export const subscribeToEvents = async (dispatch, exchange) => {
+  exchange.events.Cancel({}, (error, event) => {
+    dispatch(orderCancelled(event.returnValues))
+  })
 }
