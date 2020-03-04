@@ -100,7 +100,7 @@ function mapStateToProps(state) {
     myFilledOrders: myFilledOrdersSelector(state),
     showMyFilledOrders: myFilledOrdersLoadedSelector(state),
     myOpenOrders: myOpenOrdersSelector(state),
-    showMyOpenOrders: myOpenOrderLoaded && !orderCancelling, // will only load showing myOpenOrders if myOpenOrdersLoadedSelector is loaded and orderCancelling is not cancelling!
+    showMyOpenOrders: myOpenOrderLoaded && !orderCancelling, // will only load showing myOpenOrders if myOpenOrdersLoadedSelector is loaded and orderCancelling is not cancelled
     exchange: exchangeSelector(state),
     account: accountSelector(state)
   }

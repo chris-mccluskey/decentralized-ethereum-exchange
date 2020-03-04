@@ -11,7 +11,9 @@ import {
   filledOrdersLoaded,
   allOrdersLoaded,
   orderCancelling,
-  orderCancelled
+  orderCancelled,
+  orderFilling,
+  orderFilled
 } from './actions'
 
 
@@ -72,6 +74,15 @@ export const loadAllOrders = async (dispatch, exchange) => {
   dispatch(allOrdersLoaded(allOrders))
 }
 
+export const subscribeToEvents = async (dispatch, exchange) => {
+  exchange.events.Cancel({}, (error, event) => {
+    dispatch(orderCancelled(event.returnValues))
+  })
+  exchange.events.Trade({}, (error, event) => {
+    dispatch(orderFilled(event.returnValues))
+  })
+}
+
 export const cancelOrder = (dispatch, exchange, order, account) => {
   exchange.methods.cancelOrder(order.id).send({ from: account })
   .on('transactionHash', (hash) => {
@@ -83,8 +94,13 @@ export const cancelOrder = (dispatch, exchange, order, account) => {
   })
 }
 
-export const subscribeToEvents = async (dispatch, exchange) => {
-  exchange.events.Cancel({}, (error, event) => {
-    dispatch(orderCancelled(event.returnValues))
+export const fillOrder = (dispatch, exchange, order, account) => {
+  exchange.methods.fillOrder(order.id).send({ from: account })
+  .on('transactionHash', (hash) => {
+    dispatch(orderFilling())
+  })
+  .on('error', (error) => {
+    console.log(error)
+    window.alert('You need more gas bro!')
   })
 }
