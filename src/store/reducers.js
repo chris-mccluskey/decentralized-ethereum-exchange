@@ -50,13 +50,11 @@ function exchange(state = {}, action) {
     case 'ORDER_FILLED':
       // Prevent duplicate orders
       index = state.filledOrders.data.findIndex(order => order.id === action.order.id)
-      console.log(index)
-      if (index === -1) {
+      if (index === -1) { // It is looking for -1 because findIndex returns -1 if the passed function return false to finding the element it is looking for. Otherwise it returns the index.
         data = [...state.filledOrders.data, action.order]
       } else {
         data = state.filledOrders.data
       }
-      console.log(data)
       return {
         ...state,
         orderFilling: false,
