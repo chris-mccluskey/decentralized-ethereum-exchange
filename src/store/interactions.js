@@ -104,3 +104,5 @@ export const fillOrder = (dispatch, exchange, order, account) => {
     window.alert('You need more gas bro!')
   })
 }
+
+export const loadBalances = async (dispatch, web3, exchange, token, account) => {
