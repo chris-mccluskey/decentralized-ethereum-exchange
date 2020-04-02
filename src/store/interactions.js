@@ -13,7 +13,12 @@ import {
   orderCancelling,
   orderCancelled,
   orderFilling,
-  orderFilled
+  orderFilled,
+  etherBalanceLoaded,
+  tokenBalanceLoaded,
+  exchangeEtherBalanceLoaded,
+  exchangeTokenBalanceLoaded,
+  balancesLoaded
 } from './actions'
 
 
@@ -106,3 +111,22 @@ export const fillOrder = (dispatch, exchange, order, account) => {
 }
 
 export const loadBalances = async (dispatch, web3, exchange, token, account) => {
+  // Ether balance in account wallet
+  etherBalance = await web3.get.eth.getBalance(account)
+  dispatch(etherBalanceLoaded(etherBalance)) // Dispatch a reduct action that the balance is tokenLoaded
+
+  // Token balance in wallet
+  tokenBalance = await token.methods.balanceOf(account).call()
+  dispatch(tokenBalanceLoaded(tokenBalance))
+
+  // Exchange ether balance
+  exchangeEtherBalance = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call()
+  dispatch(exchangeEtherBalanceLoaded(exchangeEtherBalance))
+
+  // Token balance on exchange
+  exchangeTokenBalance = await exchange.methods.balanceOf(token.options.address, account).call()
+  dispatch(exchangeTokenBalanceLoaded(exchangeTokenBalance))
+
+  // Triger all balances loaded to Redux
+  dispatch(balancesLoaded())
+}

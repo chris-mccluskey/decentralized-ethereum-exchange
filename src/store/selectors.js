@@ -6,8 +6,14 @@ import { ETHER_ADDRESS, GREEN, RED, tokens, ether } from '../helpers'
 const account = state => get(state, 'web3.account')
 export const accountSelector = createSelector(account, a => a)
 
+const web3 = state => get(web3, 'web3.connection')
+export const web3Selector = createSelector(web3, w => w)
+
 const tokenLoaded = state => get(state, 'token.loaded', false)
 export const tokenLoadedSelector = createSelector(tokenLoaded, tl => tl)
+
+const token = state => get(state, 'token.contract')
+export const tokenSelector = createSelector(token, t => t)
 
 const exchangeLoaded = state => get(state, 'exchange.loaded', false)
 export const exchangeLoadedSelector = createSelector(exchangeLoaded, el => el)
@@ -309,3 +315,7 @@ export const orderCancellingSelector = createSelector(orderCancelling, status =>
 
 const orderFilling = state => get(state, 'exchange.orderFilling', false)
 export const orderFillingSelector = createSelector(orderFilling, status => status)
+
+// BALANCES
+const balancesLoading = state => get(state, 'exchange.balancesLoading', true)
+export const balancesLoadingSelector = createSelector(balancesLoading, status => status)
