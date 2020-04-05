@@ -18,6 +18,8 @@ function token(state = {}, action) {
   switch (action.type) {
     case 'TOKEN_LOADED':
       return {...state, loaded: true, contract: action.contract}
+    case 'TOKEN_BALANCE_LOADED':
+      return { ...state, balance: action.balance }
     default:
       return state
   }
@@ -28,15 +30,15 @@ function exchange(state = {}, action) {
 
   switch (action.type) {
     case 'EXCHANGE_LOADED':
-      return {...state, loaded: true, contract: action.contract}
+      return { ...state, loaded: true, contract: action.contract }
     case 'CANCELLED_ORDERS_LOADED':
-      return {...state, cancelledOrders: { loaded: true, data: action.cancelledOrders }}
+      return { ...state, cancelledOrders: { loaded: true, data: action.cancelledOrders } }
     case 'FILLED_ORDERS_LOADED':
-      return {...state, filledOrders: { loaded: true, data: action.filledOrders }}
+      return { ...state, filledOrders: { loaded: true, data: action.filledOrders } }
     case 'ALL_ORDERS_LOADED':
-      return {...state, allOrders: { loaded: true, data: action.allOrders }}
+      return { ...state, allOrders: { loaded: true, data: action.allOrders } }
     case 'ORDER_CANCELLING':
-      return {...state, orderCancelling: true }
+      return { ...state, orderCancelling: true }
     case 'ORDER_CANCELLED':
       return {
         ...state,
@@ -51,12 +53,14 @@ function exchange(state = {}, action) {
       }
     case 'ORDER_FILLED':
       // Prevent duplicate orders
-      index = state.filledOrders.data.findIndex(order => order.id === action.order.id)
-      if (index === -1) { // It is looking for -1 because findIndex returns -1 if the passed function return false to finding the element it is looking for. Otherwise it returns the index.
+      index = state.filledOrders.data.findIndex(order => order.id === action.order.id);
+
+      if(index === -1) {
         data = [...state.filledOrders.data, action.order]
       } else {
         data = state.filledOrders.data
       }
+
       return {
         ...state,
         orderFilling: false,
@@ -67,7 +71,8 @@ function exchange(state = {}, action) {
       }
 
     case 'ORDER_FILLING':
-      return {...state, orderFillinglling: true }
+      return { ...state, orderFilling: true }
+
     case 'EXCHANGE_ETHER_BALANCE_LOADED':
       return { ...state, etherBalance: action.balance }
     case 'EXCHANGE_TOKEN_BALANCE_LOADED':
@@ -84,12 +89,10 @@ function exchange(state = {}, action) {
       return { ...state, tokenDepositAmount: action.amount }
     case 'TOKEN_WITHDRAW_AMOUNT_CHANGED':
       return { ...state, tokenWithdrawAmount: action.amount }
-
     default:
       return state
   }
 }
-
 
 const rootReducer = combineReducers({
   web3,

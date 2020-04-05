@@ -18,9 +18,10 @@ import {
   tokenBalanceLoaded,
   exchangeEtherBalanceLoaded,
   exchangeTokenBalanceLoaded,
-  balancesLoaded
+  balancesLoaded,
+  balancesLoading
 } from './actions'
-
+import { ETHER_ADDRESS } from '../helpers'
 
 
 export const loadWeb3 = (dispatch) => {
@@ -86,6 +87,14 @@ export const subscribeToEvents = async (dispatch, exchange) => {
   exchange.events.Trade({}, (error, event) => {
     dispatch(orderFilled(event.returnValues))
   })
+
+  exchange.events.Deposit({}, (error, event) => {
+    dispatch(balancesLoaded())
+  })
+
+  exchange.events.Withdraw({}, (error, event) => {
+    dispatch(balancesLoaded())
+  })
 }
 
 export const cancelOrder = (dispatch, exchange, order, account) => {
@@ -101,7 +110,7 @@ export const cancelOrder = (dispatch, exchange, order, account) => {
 
 export const fillOrder = (dispatch, exchange, order, account) => {
   exchange.methods.fillOrder(order.id).send({ from: account })
-  .on('transactionHash', (hash) => {
+  .on('transactionHash', (hash) => {                                // When the tx hash comes back we dispatch the orderFilling action
     dispatch(orderFilling())
   })
   .on('error', (error) => {
@@ -112,21 +121,70 @@ export const fillOrder = (dispatch, exchange, order, account) => {
 
 export const loadBalances = async (dispatch, web3, exchange, token, account) => {
   // Ether balance in account wallet
-  etherBalance = await web3.get.eth.getBalance(account)
+  const etherBalance = await web3.eth.getBalance(account)
   dispatch(etherBalanceLoaded(etherBalance)) // Dispatch a reduct action that the balance is tokenLoaded
 
   // Token balance in wallet
-  tokenBalance = await token.methods.balanceOf(account).call()
+  const tokenBalance = await token.methods.balanceOf(account).call()
   dispatch(tokenBalanceLoaded(tokenBalance))
 
   // Exchange ether balance
-  exchangeEtherBalance = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call()
+  const exchangeEtherBalance = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call()
   dispatch(exchangeEtherBalanceLoaded(exchangeEtherBalance))
 
   // Token balance on exchange
-  exchangeTokenBalance = await exchange.methods.balanceOf(token.options.address, account).call()
+  const exchangeTokenBalance = await exchange.methods.balanceOf(token.options.address, account).call()
   dispatch(exchangeTokenBalanceLoaded(exchangeTokenBalance))
 
   // Triger all balances loaded to Redux
   dispatch(balancesLoaded())
+}
+
+export const depositEther = async (dispatch, web3, exchange, amount, account) => {
+  console.log(dispatch, web3, exchange, amount, account)
+  exchange.methods.depositEther().send({ from: account, value: web3.utils.toWei(amount, 'ether') })
+  .on('transactionHash', (hash) => {
+    dispatch(balancesLoading())
+  })
+  .on('error',(error) => {
+    console.error(error)
+    window.alert(`There was an error!`)
+  })
+}
+
+export const withdrawEther = async (dispatch, web3, exchange, amount, account) => {
+  exchange.methods.withdrawEther(web3.utils.toWei(amount, 'ether')).send({ from: account })
+  .on('transactionHash', (hash) => {
+    dispatch(balancesLoading())
+  })
+  .on('error',(error) => {
+    console.error(error)
+    window.alert(`There was an error!`)
+  })
+}
+
+export const depositToken = (dispatch, exchange, web3, token, amount, account) => {
+  amount = web3.utils.toWei(amount, 'ether')
+  token.methods.approve(exchange.options.address, amount).send({ from: account })
+  .on('transactionHash', (hash) => {
+    exchange.methods.depositToken(token.options.address, amount).send({ from: account })
+    .on('transactionHash', (hash) => {
+      dispatch(balancesLoading())
+    })
+    .on('error',(error) => {
+      console.error(error)
+      window.alert(`There was an error!`)
+    })
+  })
+}
+
+export const withdrawToken = (dispatch, exchange, web3, token, amount, account) => {
+  exchange.methods.withdrawToken(token.options.address, web3.utils.toWei(amount, 'ether')).send({ from: account })
+  .on('transactionHash', (hash) => {
+    dispatch(balancesLoading())
+  })
+  .on('error',(error) => {
+    console.error(error)
+    window.alert(`There was an error!`)
+  })
 }

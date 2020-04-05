@@ -50,10 +50,10 @@ export function allOrdersLoaded(allOrders) {
   }
 }
 
-// Cancel order
+// Cancel Order
 export function orderCancelling() {
   return {
-    type: 'ORDER_CANCELLING',
+    type: 'ORDER_CANCELLING'
   }
 }
 
@@ -64,10 +64,10 @@ export function orderCancelled(order) {
   }
 }
 
-// Fill order
+// Fill Order
 export function orderFilling() {
   return {
-    type: 'ORDER_FILLING',
+    type: 'ORDER_FILLING'
   }
 }
 
@@ -116,5 +116,33 @@ export function balancesLoaded() {
 export function balancesLoading() {
   return {
     type: 'BALANCES_LOADING'
+  }
+}
+
+export function etherDepositAmountChanged(amount) {
+  return {
+    type: 'ETHER_DEPOSIT_AMOUNT_CHANGED',
+    amount
+  }
+}
+
+export function etherWithdrawAmountChanged(amount) {
+  return {
+    type: 'ETHER_WITHDRAW_AMOUNT_CHANGED',
+    amount
+  }
+}
+
+export function tokenDepositAmountChanged(amount) {
+  return {
+    type: 'TOKEN_DEPOSIT_AMOUNT_CHANGED',
+    amount
+  }
+}
+
+export function tokenWithdrawAmountChanged(amount) {
+  return {
+    type: 'TOKEN_WITHDRAW_AMOUNT_CHANGED',
+    amount
   }
 }
