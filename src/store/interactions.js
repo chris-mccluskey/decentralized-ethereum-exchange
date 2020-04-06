@@ -1,4 +1,5 @@
 // Interactions will contain interactions with the loadBlockchainData
+import Web3 from 'web3'
 import Token from '../abis/Token.json'
 import Exchange from '../abis/Exchange.json'
 import {
@@ -25,7 +26,6 @@ import {
 } from './actions'
 import { ETHER_ADDRESS } from '../helpers'
 
-const Web3 = require('web3')
 
 export const loadWeb3 = (dispatch) => {
   const web3 = new Web3(Web3.givenProvider || "HTTP://127.0.0.1:7545")
