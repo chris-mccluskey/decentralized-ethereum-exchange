@@ -128,7 +128,7 @@ export const fillOrder = (dispatch, exchange, order, account) => {
 
 export const loadBalances = async (dispatch, web3, exchange, token, account) => {
   // Ether balance in account wallet
-  const etherBalance = await web3.eth.getBalance(account)
+  const etherBalance = await web3.eth.getBalance(account).then(console.log.toString())
   dispatch(etherBalanceLoaded(etherBalance)) // Dispatch a reduct action that the balance is tokenLoaded
 
   // Token balance in wallet
