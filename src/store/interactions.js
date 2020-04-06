@@ -38,7 +38,6 @@ export const loadAccount = async (dispatch, web3) => {
   const account = accounts[0]
   dispatch(web3AccountLoaded(account))
   return account
-  console.log(account)
 }
 
 export const loadToken = async (dispatch, web3, networkId) => {
