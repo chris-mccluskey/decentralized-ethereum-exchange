@@ -38,6 +38,7 @@ export const loadAccount = async (dispatch, web3) => {
   const account = accounts[0]
   dispatch(web3AccountLoaded(account))
   return account
+  console.log(account)
 }
 
 export const loadToken = async (dispatch, web3, networkId) => {
@@ -150,7 +151,7 @@ export const loadBalances = async (dispatch, web3, exchange, token, account) => 
 
 export const depositEther = async (dispatch, web3, exchange, amount, account) => {
   console.log(dispatch, web3, exchange, amount, account)
-  exchange.methods.depositEther().send({ from: account, value: web3.utils.toWei(amount, 'ether') })
+  exchange.methods.depositEther().send({ from: account, value: web3.utils.toWei(amount, 'ether') }) // depositEther needed () or it didn't work
   .on('transactionHash', (hash) => {
     dispatch(balancesLoading())
   })
