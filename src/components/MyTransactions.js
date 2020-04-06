@@ -67,7 +67,7 @@ class MyTransactions extends Component {
                   <tr>
                     <th>Time</th>
                     <th>MUSKEY</th>
-                    <th>MUSKEY/ETH</th>
+                    <th>ETH / MUSKEY</th>
                   </tr>
                 </thead>
                 { this.props.showMyFilledOrders ? showMyFilledOrders(this.props) : <Spinner type="table" />}

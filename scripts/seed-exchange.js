@@ -1,4 +1,4 @@
-// Script to make transactions on Ganache, makes orders, cancels, fills, etc.. 
+// Script to make transactions on Ganache, makes orders, cancels, fills, etc..
 
 // Contracts
 const Token = artifacts.require("Token")
@@ -11,6 +11,7 @@ const ether = (n) => {
     web3.utils.toWei(n.toString(), 'ether')
   )
 }
+
 const tokens = (n) => ether(n)
 
 const wait = (seconds) => {
@@ -22,7 +23,8 @@ module.exports = async function(callback) {
   try {
     // Fetch accounts from wallet - these are unlocked
     const accounts = await web3.eth.getAccounts()
-
+    console.log(accounts)
+    web3.eth.defaultAccount = web3.eth.accounts[0]
     // Fetch the deployed token
     const token = await Token.deployed()
     console.log('Token fetched', token.address)
