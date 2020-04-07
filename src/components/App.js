@@ -12,6 +12,26 @@ import {
 } from '../store/interactions.js'
 import { contractsLoadedSelector } from '../store/selectors'
 
+window.addEventListener("load", async () => {
+  // Modern dapp browsers...
+  if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    try {
+      // Request account access if needed
+      await window.ethereum.enable();
+    } catch (error) {
+      // User denied account access...
+    }
+  }
+  // Legacy dapp browsers...
+  else if (window.web3) {
+    window.web3 = new Web3(Web3.currentProvider);
+  }
+  // Non-dapp browsers...
+  else {
+    console.log("Non-Ethereum browser detected. You should consider trying MetaMask");
+  }
+});
 
 // componentWillMount is a react life cycle function.
 class App extends Component {
@@ -37,26 +57,6 @@ class App extends Component {
     }
 
 
-    window.addEventListener("load", async () => {
-      // Modern dapp browsers...
-      if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
-        try {
-          // Request account access if needed
-          await window.ethereum.enable();
-        } catch (error) {
-          // User denied account access...
-        }
-      }
-      // Legacy dapp browsers...
-      else if (window.web3) {
-        window.web3 = new Web3(web3.currentProvider);
-      }
-      // Non-dapp browsers...
-      else {
-        console.log("Non-Ethereum browser detected. You should consider trying MetaMask");
-      }
-    });
   }
 // Must use className when working with react rather than just the default class
   render() {
